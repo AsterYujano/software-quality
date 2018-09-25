@@ -2,13 +2,13 @@ dataFile <- "/home/rstudio/data.csv"
 d <- read.csv2(dataFile, sep=";")
 head(d)
 
-m1 <- map(
+mstandart <- map(
   alist(
-    weight ~ dnorm(mu, sigma),
-    mu <- a + ba*area,
+    tp ~ dnorm(mu, sigma),
+    mu <- a + bc*category + bt*technique,
     a ~ dnorm(0, 100),
-    ba ~ dnorm(0, 10),
-    sigma ~ dunif(0, 50)
-  ), 
-  data =d
+    c(bc, bt) ~ dnorm(0, 20),
+    sigma ~ dunif(0,50)
+  ),
+  data = d
 )
