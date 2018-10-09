@@ -1,14 +1,32 @@
+#########
+## NEW ##
+#########
+library(rethinking)
 dataFile <- "/home/rstudio/data.csv"
 d <- read.csv2(dataFile, sep=";")
 head(d)
 
-mstandart <- map(
+##################
+# Like lecture 6 #
+##################
+
+d$lessexp <- ifelse( d$category=="LE" , 1 , 0 )
+m1 <- map(
   alist(
-    tp ~ dnorm(mu, sigma),
-    mu <- a + bc*category + bt*technique,
-    a ~ dnorm(0, 100),
-    c(bc, bt) ~ dnorm(0, 20),
-    sigma ~ dunif(0,50)
-  ),
-  data = d
-)
+    technique ~ dbinom( tp , p) ,
+    logit(p) <- a + bl*lessexp ,
+    a ~ dnorm(0,100) ,
+    bl ~ dnorm(0,100)
+  ) ,
+  data=d )
+m2 <- map(
+  alist(
+    technique ~ dbinom( tp , p),
+    logit(p) <- a ,
+    a ~ dnorm(0,10)
+  ) ,
+  data=d )
+
+compare( m1 , m2 )
+
+precis(m1)
