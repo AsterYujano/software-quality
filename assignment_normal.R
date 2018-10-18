@@ -1,25 +1,39 @@
 library(rethinking)
 dataFile <- "/home/rstudio/data.csv"
 d <- read.csv2(dataFile, sep=";")
+d$tech <- ifelse( d$technique=="OT" , 1 , 0 )
+d$cat <- ifelse( d$category=="LE" , 1 , 0 )
 
-d$lessexp <- ifelse( d$category=="LE" , 1 , 0 )
-mexp <- map(
+mnorm_cat <- map(
   alist(
     tp ~ dnorm( mu, sigma),
-    mu <- a + bl*lessexp,
+    mu <- a + bc*cat,
     a ~ dnorm(0,100),
-    bl ~ dnorm(0,10),
+    bc ~ dnorm(0,10),
     sigma ~ dunif(0,50)
   ) , data=d )
-precis(mexp)
+precis(mnorm_cat)
 
-d$oldtech <- ifelse( d$technique=="OT" , 1 , 0 )
-mtech <- map(
+
+mnorm_tech <- map(
   alist(
     tp ~ dnorm( mu, sigma),
-    mu <- a + bo*oldtech,
+    mu <- a + bt*tech,
     a ~ dnorm(0,100),
-    bo ~ dnorm(0,10),
+    bt ~ dnorm(0,10),
     sigma ~ dunif(0,50)
   ) , data=d )
-precis(mtech)
+precis(mnorm_tech)
+
+mnorm_both <- map(
+  alist(
+    tp ~ dnorm( mu, sigma),
+    mu <- a + bc*cat +bt*tech,
+    a ~ dnorm(0,100),
+    bc ~ dnorm(0,10),
+    bt ~ dnorm(0,10),
+    sigma ~ dunif(0,50)
+  ) , data=d )
+precis(mnorm_both)
+
+compare(mnorm_cat, mnorm_tech, mnorm_both)

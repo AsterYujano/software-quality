@@ -21,3 +21,23 @@ m2 <- map(
   ) , data=d )
 precis(m1)
 precis(m2)
+
+
+#########
+
+library(rethinking)
+data(chimpanzees)
+d <- chimpanzees
+d2 <- d
+d2$recipient <- NULL
+m10.4_map <- map(
+  alist(
+    pulled_left ~ dbinom(1, p),
+    logit(p) <- a[actor] + (bp + bpC*condition)*prosoc_left,
+    a[actor] ~ dnorm(0,10),
+    bp ~ dnorm(0,10),
+    bpC ~ dnorm(0,10)
+  ),data=d2)
+  
+  
+  
