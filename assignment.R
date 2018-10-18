@@ -4,8 +4,8 @@
 library(rethinking)
 dataFile <- "/home/rstudio/data.csv"
 d <- read.csv2(dataFile, sep=";")
-etude <- d
-head(d)
+#etude <- d
+#head(d)
 
 ##################
 # Like lecture 5 (foxes) #
@@ -32,6 +32,26 @@ mtech <- map(
     sigma ~ dunif(0,50)
   ) , data=d )
 precis(mtech)
+
+#############
+## Try 
+######
+library(rethinking)
+dataFile <- "/home/rstudio/data.csv"
+d <- read.csv2(dataFile, sep=";")
+d$lessexp <- ifelse( d$category=="LE" , 1 , 0 )
+d$oldtech <- ifelse( d$technique=="OT" , 1 , 0 )
+d$recipient <- NULL
+m10.4_map <- map(
+  alist(
+    oldtech ~ dbinom(1, p),
+    logit(p) <- a + (bpC*lessexp),
+    a ~ dnorm(0,10),
+    bpC ~ dnorm(0,10)
+  ),data=d)
+
+
+
 
 
 ##################
