@@ -53,7 +53,10 @@ mpoisson_tech <- map(
   ),
   data=d )
 precis(mpoisson_tech,corr=TRUE)
-plot(precis(mpoisson_tech))
 
 compare(mpoisson_interactions, mpoisson_NoInterac, mpoisson_cat, mpoisson_tech)
+
+#plot(compare(mpoisson_interactions, mpoisson_NoInterac, mpoisson_cat, mpoisson_tech))
+
 pairs(mpoisson_NoInterac)
+

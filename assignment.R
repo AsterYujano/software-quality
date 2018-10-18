@@ -48,7 +48,8 @@ m10.4_map <- map(
     logit(p) <- a + (bpC*lessexp),
     a ~ dnorm(0,10),
     bpC ~ dnorm(0,10)
-  ),data=d)
+),data=d)
+precis(m10.4_map)
 
 
 
