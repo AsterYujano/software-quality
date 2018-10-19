@@ -37,3 +37,4 @@ mnorm_both <- map(
 precis(mnorm_both)
 
 compare(mnorm_cat, mnorm_tech, mnorm_both)
+pairs(mnorm_both)
