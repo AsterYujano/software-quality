@@ -39,5 +39,27 @@ m10.4_map <- map(
     bpC ~ dnorm(0,10)
   ),data=d2)
   
+m10.4 <- map2stan(
+  alist(
+    pulled_left ~ dbinom(1, p),
+    logit(p) <- a[actor] + (bp + bpC*condition)*prosoc_left,
+    a[actor] ~ dnorm(0,10),
+    bp ~ dnorm(0,10),
+    bpC ~ dnorm(0,10)
+  ), data=d2, chains=2, iter=2500, warmup=500)
   
+m10.3 <- map2stan(
+  alist(
+    pulled_left ~ dbinom(1, p),
+    logit(p) <- a + (bp + bpC*condition)*prosoc_left,
+    a ~ dnorm(0,10),
+    bp ~ dnorm(0,10),
+    bpC ~ dnorm(0,10)
+  ), data=d2, chains=2)
+post <- extract.samples(m10.3)
+str(post)
+
+compare(m10.3, m10.4)
+pairs(m10.3, m10.4)
+stan(m10.3)
   
