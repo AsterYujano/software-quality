@@ -3,19 +3,7 @@ dataFile <- "/home/rstudio/data.csv"
 d <- read.csv2(dataFile, sep=";")
 d$cat <- ifelse( d$category=="ME" , 1 , 0 )
 d$tech <- ifelse( d$technique=="NT" , 1 , 0 )
-
-mstan <- map2stan(
-  alist(
-    tp ~ dnorm( mu , sigma ) ,
-    mu <- a + bt*tech + bc*cat + bct*cat*tech ,
-    a ~ dnorm(0,100),
-    bt ~ dnorm(0,10),
-    bc ~ dnorm(0,10),
-    bct ~ dnorm(0,10),
-    sigma ~ dcauchy(0,2)
-  ) ,
-  data=d)
-precis(mstan)
+ 
 #### Sampling again in paralelles
 mstan_4chains <- map2stan( mstan , chains=4 , cores=4 )
 precis(mstan_4chains)
@@ -25,8 +13,10 @@ post <- extract.samples( mstan )
 str(post)
 
 ## R code 8.9
-pairs(mstan)
-pairs(post)
+#pairs(mstan)
+#pairs(post)
+plot(mstan)
+
 ##############################""
 
 ## R code 8.2
