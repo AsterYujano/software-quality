@@ -4,6 +4,48 @@ d <- read.csv2(dataFile, sep=";")
 d$cat <- ifelse( d$category=="ME" , 1 , 0 )
 d$tech <- ifelse( d$technique=="NT" , 1 , 0 )
  
+mstan1 <- map2stan(
+  alist(
+    tp ~ dnorm( mu , sigma ) ,
+    mu <- a + bt*tech + bc*cat + bct*cat*tech ,
+    a ~ dnorm(0,10),
+    bt ~ dnorm(0,10),
+    bc ~ dnorm(0,10),
+    bct ~ dnorm(0,10),
+    sigma ~ dcauchy(0,2)
+  ) ,
+  data=d)
+mstan2 <- map2stan(
+  alist(
+    tp ~ dnorm( mu , sigma ) ,
+    mu <- a + bt*tech + bc*cat,
+    a ~ dnorm(0,10),
+    bt ~ dnorm(0,10),
+    bc ~ dnorm(0,10),
+    sigma ~ dcauchy(0,2)
+  ) ,
+  data=d)
+mstan3 <- map2stan(
+  alist(
+    tp ~ dnorm( mu , sigma ) ,
+    mu <- a + bt*tech,
+    a ~ dnorm(0,10),
+    bt ~ dnorm(0,10),
+    sigma ~ dcauchy(0,2)
+  ) ,
+  data=d)
+mstan4 <- map2stan(
+  alist(
+    tp ~ dnorm( mu , sigma ) ,
+    mu <- a + bc*cat,
+    a ~ dnorm(0,10),
+    bc ~ dnorm(0,10),
+    sigma ~ dcauchy(0,2)
+  ) ,
+  data=d)
+compare(mstan1, mstan2, mstan3, mstan4)
+
+
 #### Sampling again in paralelles
 mstan_4chains <- map2stan( mstan , chains=4 , cores=4 )
 precis(mstan_4chains)
