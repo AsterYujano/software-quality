@@ -119,3 +119,27 @@ precis(mstan2)
 precis(mstan3)
 
 compare(mstan_temoin, mstan_1, mstan_2, mstan_3)
+
+
+###############"
+# Best model
+library(rethinking)
+dataFile <- "/home/rstudio/data.csv"
+d <- read.csv2(dataFile, sep=";")
+d$cat <- ifelse( d$category=="ME" , 1 , 0 )
+d$tech <- ifelse( d$technique=="NT" , 1 , 0 )
+mstan <- map2stan(
+  alist(
+    tp ~ dnorm( mu , sigma ) ,
+    mu <- a + bt*tech + bc*cat,
+    a ~ dnorm(0,10),
+    bt ~ dnorm(0,10),
+    bc ~ dnorm(0,10),
+    sigma ~ dcauchy(0,2)
+  ) ,
+  data=d)
+
+post <- extract.samples(mstan)
+str(post)
+plot(mstan)
+precis(mstan)
